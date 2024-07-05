@@ -22,6 +22,6 @@ jobs:
     - name: Build the Docker image
       run: docker build -t node-express-hello-world .
     - name: Push to Dockerhub
-      run: docker push Ankitkj1999/node-express-hello-world:latest
+      run: docker push ankitkj199/node-express-hello-world:latest
       
 
