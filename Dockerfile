@@ -20,7 +20,7 @@
 # CMD [ "node", "index.js" ]
 
 
-FROM node:16
+FROM node:22
 
 # Create app directory
 WORKDIR /usr/src/app
