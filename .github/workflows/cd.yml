@@ -7,16 +7,23 @@ on:
       - completed
 
 jobs:
-
   build:
-
     runs-on: self-hosted
 
     steps:
+    - name: Check Docker permissions
+      run: |
+        if [ ! -e /var/run/docker.sock ]; then
+          echo "Docker socket not found."
+          exit 1
+        fi
+        if [ ! -w /var/run/docker.sock ]; then
+          echo "Docker socket is not writable by the current user."
+          sudo chown $USER /var/run/docker.sock
+        fi
     - name: Pull Docker image
-      run: docker pull ankitkj199/node-express-hello-world:latest
+      run: sudo docker pull ankitkj199/node-express-hello-world:latest
     - name: Delete Old docker container
       run: sudo docker rm -f cicd-pipeline-container || true
     - name: Run Docker Container
       run: sudo docker run -d -p 8080:8080 --name cicd-pipeline-container ankitkj199/node-express-hello-world
-
