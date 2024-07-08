@@ -7,16 +7,22 @@ on:
       - completed
 
 jobs:
-
   build:
-
     runs-on: self-hosted
 
     steps:
-    - name: Pull Docker image
-      run: docker pull ankitkj199/node-express-hello-world:latest
-    - name: Delete Old docker container
-      run: sudo docker rm -f cicd-pipeline-container || true
-    - name: Run Docker Container
-      run: sudo docker run -d -p 8080:8080 --name cicd-pipeline-container ankitkj199/node-express-hello-world
+      - name: Pull Docker image
+        run: docker pull ankitkj199/node-express-hello-world:latest
 
+      - name: Run New Docker Container
+        run: |
+          docker stop cicd-pipeline-container || true
+          docker rm cicd-pipeline-container || true
+          docker run -d -p 8080:8080 --name cicd-pipeline-container-new ankitkj199/node-express-hello-world:latest
+
+      - name: Cleanup Old Container
+        run: |
+          docker stop cicd-pipeline-container-old || true
+          docker rename cicd-pipeline-container cicd-pipeline-container-old || true
+          docker rename cicd-pipeline-container-new cicd-pipeline-container || true
+          docker rm cicd-pipeline-container-old || true
